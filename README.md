@@ -10,30 +10,55 @@ en- We make our own radio using the TEA5767 radio module.
   <li>Jumper</li>
 </ul>
 
+
+<h2>Breadboard Schematic Circuit</h2>
+<img src="https://example.com/image.jpg" alt="Proje Resmi" style="max-width:100%; height:auto;">
+
+
+
+<h2>Libraries</h2>
+<ul>
+  <li>SPI.h</li>
+  <li>TEA5767.h</li>
+  <li>Wire.h</li>  
+</ul>
+
+
 <h2>Code</h2>
-```javascript
-function helloWorld() {
-    console.log("Merhaba, Dünya!");
-}
-helloWorld();
-
-
-Bu şekilde kod bloğunu üç ters tırnak içine alarak ve dil belirttiğin kısımda (`javascript` gibi) ilgili programlama dilini belirtmen gerekiyor. Bu şekilde kullanıcılar, kodu seçip kopyalayabilir.
-
-Bir alternatif olarak, bazı JavaScript kütüphaneleri veya eklentiler, kod bloklarına kopyalama butonu eklemek için kullanılabilir. Örneğin, Clipboard.js gibi bir kütüphane kullanarak kopyalama işlevselliği ekleyebilirsin. Bu kütüphane, kullanıcıların bir düğmeye tıklayarak kodu panolarına kopyalamalarını sağlar.
-
-Örnek bir kopyalama düğmesi eklemek için:
+<bold>Example to run on serial monitor: FREQ:88.2</bold>
 
 ```html
-<!-- Örnek bir HTML kodu -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
-<!-- Kopyalama düğmesi -->
-<button class="btn" data-clipboard-target="#kod">Kodu Kopyala</button>
-<!-- Kod bloğu -->
-<pre><code id="kod" class="javascript">
-function helloWorld() {
-    console.log("Merhaba, Dünya!");
+TEA5767 Radio;
+
+void setup() {
+  Wire.begin();
+  Radio.init();
+  Serial.begin(9600); // Seri bağlantıyı başlat
 }
-helloWorld();
-</code></pre>
+
+void loop() {
+  if (Serial.available() > 0) {
+    String input = Serial.readStringUntil('\n'); // Seri porttan giriş al
+
+    if (input.startsWith("FREQ:")) { // Gelen veri "FREQ:" ile başlıyorsa
+      double newFreq = input.substring(5).toFloat(); // Frekans değerini al
+      Radio.set_frequency(newFreq); // Yeni frekansı ayarla
+
+      Serial.print("New frequency: ");
+      Serial.println(newFreq);
+    }
+  }
+
+  // Radyo durumunu oku ve seri monitöre yazdır
+  unsigned char buf[5];
+  if (Radio.read_status(buf) == 1) {
+    double currentFreq = floor(Radio.frequency_available(buf) / 100000 + 0.5) / 10;
+
+    Serial.print("Current frequency: ");
+    Serial.println(currentFreq);
+  }
+  
+  delay(500);
+}
+
 
