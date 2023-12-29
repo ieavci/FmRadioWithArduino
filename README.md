@@ -12,7 +12,7 @@ en- We make our own radio using the TEA5767 radio module.
 
 
 <h2>Breadboard Schematic Circuit</h2>
-<img src="https://example.com/image.jpg" alt="Proje Resmi" style="max-width:100%; height:auto;">
+<img src="https://github.com/ieavci/FmRadioWithArduino/blob/main/schematic%20circuit/radyotinker.jpg" alt="Proje Resmi" style="max-width:100%; height:auto;">
 
 
 
